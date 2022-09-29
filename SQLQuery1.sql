@@ -29,3 +29,7 @@ insert into client
 values
 ('C101', 'Amali', 'Colombo', 0772562334, 1500, '2015-05-12');
 select* from client;
+insert into client
+(Client_ID, Client_Name, Client_Address, Balance_Due, Order_Date) values
+('C102', 'Pasindu', 'Colombo', 1500, '2005-05-04');
+select * from client;
