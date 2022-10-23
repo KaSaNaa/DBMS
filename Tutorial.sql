@@ -90,5 +90,160 @@ drop database [DatabaseName] -- deletes a database
 		-- this takes 3 parameters (String, Start index value, length of substring)
 		select SUBSTRING('123456789', 5, 4);
 
-		-- ORDER BY - sorts the records by order by clause(ascending)
-		select * from Employee ORDER BY e_Salary;
+-- ORDER BY - sorts the records by order by clause(ascending by default)
+	select * from Employee ORDER BY e_Salary;
+	select * from Employee ORDER BY e_Salary desc;
+
+-- TOP - fetches the top n number of records
+	select top 3 * from Employee;
+
+-- GROUP BY - gets aggregate result with respct to a group
+	select AVG(e_salary), e_gender from Employee GROUP BY e_gender;
+	select AVG(e_salary), e_name from Employee GROUP BY e_name ORDER BY AVG(e_salary) desc;
+
+-- HAVING - uses in combination with GROUP BY to impose conditions on groups
+	select e_dept, AVG(e_salary) as AVG_SALARY
+	from Employee
+	GROUP BY e_dept
+	HAVING AVG(e_salary)>10000;
+
+-- UPDATE - uses to modify existing records in a table
+	UPDATE Employee 
+	set e_gender = 'fmale' where e_name = 'Bob'; 
+
+	UPDATE Employee 
+	SET e_dept = 'Ops'
+	WHERE e_gender = 'male';
+
+	UPDATE Employee
+	SET e_salary = 50000
+
+-- DELETE - uses to delete existing records in the table
+	DELETE FROM Employee where e_gender = 'fmale'
+
+-- TRUNCATE - deleted all the data in a table(structure remains)
+	TRUNCATE table Employee;
+
+-- JOINS in SQL 
+
+	--	INNER JOIN - shows records that have matching values in both the tables.(Intersection of two tables)
+		/* Syntax 
+		*/ 
+		/*
+			SELECT columns
+			FROM table1
+			INNER JOIN table2
+			ON table1.column_x = table2.column_y
+		*/
+
+		SELECT employee.e_Name, employee.e_dept, department.Location
+		FROM Employee
+		INNER JOIN department ON employee.dpt_ID = department.DEPT_ID;
+		
+	-- LEFT JOIN - shows all the record from the left tables and matching records from the right table.
+		/*
+		SELECT columns
+		FROM table1
+		LEFT JOIN table2
+		ON table1.column_x = table2.column_y;
+		*/
+
+		SELECT EMPLOYEE.e_Name, EMPLOYEE.e_dept, DEPARTMENT.DEPT_NAME, DEPARTMENT.LOCATION
+		FROM EMPLOYEE
+		LEFT JOIN DEPARTMENT 
+		ON EMPLOYEE.e_dept = DEPARTMENT.DEPT_NAME;
+
+	-- RIGHT JOIN 
+		/* 
+		SELECT columns
+		FROM table1
+		RIGHT JOIN table2
+		ON table1.column_x = table2.column_y;
+		*/
+
+		select employee.e_name, employee.e_dept, department.DEPT_Name, department.location
+		FROM employee
+		RIGHT JOIN Department 
+		ON Employee.e_dept = department.DEPT_Name;
+
+	-- FULL JOIN 
+
+		SELECT EMPLOYEE.e_Name, EMPLOYEE.e_dept, DEPARTMENT.DEPT_NAME, DEPARTMENT.LOCATION
+		FROM EMPLOYEE
+		FULL JOIN DEPARTMENT 
+		ON EMPLOYEE.e_dept = DEPARTMENT.DEPT_NAME;
+	
+	-- UPDATE using JOIN -- Joins two tables and updates the table
+		UPDATE employee
+		set e_age = e_age + 10
+		from employee
+		join department on employee.e_dept = department.DEPT_Name
+		where location = 'Colombo';
+
+	-- DELETE using JOIN
+		DELETE employee
+		from Employee
+		join department on employee.e_dept = department.DEPT_NAME
+		where location = 'Colombo';
+
+-- SET OPERATORS (tables must have same types and columns)
+
+	-- UNION Operator - shows the data of both tables in a one table. 
+		select * from STUDENT_DETAILS1
+		union
+		select * from STUDENT_DETAILS2
+
+	-- EXCEPT Operator - shows the table1 - table2 data
+		
+		SELECT * FROM STUDENT_DETAILS1
+		EXCEPT 
+		SELECT * FROM STUDENT_DETAILS2;
+		
+	-- INTERSECT Operator - shows the intersect of two tables
+		SELECT * FROM STUDENT_DETAILS1
+		INTERSECT 
+		SELECT * FROM STUDENT_DETAILS2
+	
+	-- VIEW - shows virtual a table based on the result of an SQL statement
+		CREATE VIEW FEMALE_EMPLOYEES AS 
+		SELECT * FROM EMPLOYEE
+		WHERE e_gender = 'fmale';  -- then, to show the table which is created virtually, use
+		SELECT * FROM FEMALE_EMPLOYEES
+
+	-- DROP VIEW - drops the view we have created
+		DROP VIEW FEMALE_EMPLOYEES
+
+-- ALTER TABLE - ADD, DELETE and MODIFY columns in existing tables
+	ALTER TABLE EMPLOYEE
+	ADD E_DOB DATE;
+
+	-- DROP COLUMN
+		ALTER TABLE EMPLOYEE
+		DROP COLUMN E_DOB
+
+-- User Defined Functions 
+
+	-- Scalar Valued Function - Always return a scalar value
+	/* 
+
+	CREATE FUNCTION function_name(param1 data_type, param2 data_type...)
+	RETURN return_datatype
+	AS
+	BEGIN
+		--- Function Body
+	RETURN value
+	END
+
+	*/
+
+	CREATE FUNCTION ADD_FIVE(@NUM INT)
+	RETURNS  INT 
+	AS 
+	BEGIN 
+	RETURN (
+		@NUM+5
+	)
+	END
+
+	SELECT DBO.ADD_FIVE(100)
+	
