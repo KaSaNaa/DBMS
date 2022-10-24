@@ -224,26 +224,38 @@ drop database [DatabaseName] -- deletes a database
 -- User Defined Functions 
 
 	-- Scalar Valued Function - Always return a scalar value
-	/* 
+		/* 
 
-	CREATE FUNCTION function_name(param1 data_type, param2 data_type...)
-	RETURN return_datatype
-	AS
-	BEGIN
-		--- Function Body
-	RETURN value
-	END
+		CREATE FUNCTION function_name(param1 data_type, param2 data_type...)
+		RETURN return_datatype
+		AS
+		BEGIN
+			--- Function Body
+		RETURN value
+		END
 
-	*/
+		*/
 
-	CREATE FUNCTION ADD_FIVE(@NUM INT)
-	RETURNS  INT 
-	AS 
-	BEGIN 
-	RETURN (
-		@NUM+5
-	)
-	END
+		CREATE FUNCTION ADD_FIVE(@NUM INT)
+		RETURNS  INT 
+		AS 
+		BEGIN 
+		RETURN (
+			@NUM+5
+		)
+		END
 
-	SELECT DBO.ADD_FIVE(100)
+		SELECT DBO.ADD_FIVE(100)
 	
+	-- Table Valued Function - returns a table
+
+		CREATE  FUNCTION SELECT_GENDER(@GENDER AS VARCHAR (20))
+		RETURNS TABLE 
+		AS 
+		RETURN 
+		(
+			SELECT * FROM EMPLOYEE WHERE E_GENDER = @GENDER
+		);
+
+		SELECT * FROM DBO.SELECT_GENDER('fmale');
+		drop database tutorial
